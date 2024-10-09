@@ -11,7 +11,7 @@ Backend::Backend() {
         if (errorMessageID != 0) {
             LPSTR messageBuffer = nullptr;
             size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-                                         NULL, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
+                                         nullptr, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), reinterpret_cast<LPSTR>(&messageBuffer), 0, nullptr);
             std::string message(messageBuffer, size);
             std::cerr << "Error loading DLL: " << message << std::endl;
             LocalFree(messageBuffer);
@@ -19,21 +19,20 @@ Backend::Backend() {
         exit(1);
     }
 
-    //
-    // std::cout << "Successfully loaded backend library at " << path << std::endl;
+    AssignFunc(bind_window, symbol("bind_window"));
     // if (!free()) {
     //     std::cerr << "Failed to free backend library" << std::endl;
     // }
 }
 
-HANDLE Backend::load(const char* path) const {
+void* Backend::load(const char* path) const {
     return LOAD_LIB(path);
 }
 
-SYMBOL Backend::symbol(const char *name) const {
+void* Backend::symbol(const char *name) const {
     return GET_SYMBOL(handle, name);
 }
 
-CODE Backend::free() const {
+int Backend::free() const {
     return UNLOAD_LIB(handle);
 }

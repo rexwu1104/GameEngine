@@ -15,22 +15,13 @@ int GUI::main_window() {
     const auto builder = new game_engine::Window::Builder();
     window = create_window(
         builder
-            ->set_size(400, 400)
-            ->set_title("Game Engine")
-            ->set_standard_alone(true)
+            ->size(400, 400)
+            ->title("Game Engine1")
+            ->standard_alone(false)
     );
-    create_window(
-        builder
-            ->set_size(300, 400)
-            ->set_title("Game Engine")
-            ->set_standard_alone(false)
-    );
-    create_window(
-        builder
-            ->set_size(300, 200)
-            ->set_title("Game Engine")
-            ->set_standard_alone(true)
-    );
+
     delete builder;
+
+    backend.bind_window(window);
     return game_engine::Window::wait_for_exit();
 }

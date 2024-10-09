@@ -1,18 +1,13 @@
-#include <game_engine/platform/Window.h>
-#if defined(_WIN32)
-#include <game_engine/platform/win32/WindowHandle.h>
-#elif defined(__APPLE__) && defined(__MACH__)
-// macos
-#else
-// linux
-#endif
+#include <game_engine/gui/Window.h>
+#include <game_engine/platform/full.h>
 
 #include <iostream>
 namespace game_engine {
     std::vector<void*> Window::handles;
     Window::Window(const Builder* builder) :
         width(builder->get_width()),
-        height(builder->get_height()) {
+        height(builder->get_height()),
+        standard_alone(builder->get_standard_alone()) {
         handles.push_back(this);
     }
 
@@ -26,19 +21,24 @@ namespace game_engine {
         handles.erase(_handle);
     }
 
-    Window::Builder* Window::Builder::set_size(const int width, const int height) {
-        this->width = width;
-        this->height = height;
+    Window::Builder* Window::Builder::size(const int width, const int height) {
+        this->_width = width;
+        this->_height = height;
         return this;
     }
 
-    Window::Builder* Window::Builder::set_title(const char *title) {
-        this->title = title;
+    Window::Builder* Window::Builder::title(const char *title) {
+        this->_title = title;
         return this;
     }
 
-    Window::Builder* Window::Builder::set_standard_alone(const bool standard_alone) {
-        this->standard_alone = standard_alone;
+    Window::Builder* Window::Builder::standard_alone(const bool standard_alone) {
+        this->_standard_alone = standard_alone;
+        return this;
+    }
+
+    Window::Builder *Window::Builder::drop_file(bool drop_file) {
+        this->_drop_file = drop_file;
         return this;
     }
 

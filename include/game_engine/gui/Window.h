@@ -11,24 +11,27 @@ private:
     int width, height;
 protected:
     static std::vector<void*> handles;
-    bool standard_alone;
+    bool standard_alone = false;
 public:
     class Builder {
     private:
-        int width = 0, height = 0;
-        const char* title;
-        bool standard_alone;
+        int _width = 0, _height = 0;
+        const char* _title;
+        bool _standard_alone;
+        bool _drop_file;
     protected:
         friend class Window;
         friend class WindowHandle;
-        int get_width() const { return width; };
-        int get_height() const { return height; };
-        const char* get_title() const { return title; };
-        bool get_standard_alone() const { return standard_alone; };
+        int get_width() const { return _width; }
+        int get_height() const { return _height; }
+        const char* get_title() const { return _title; }
+        bool get_standard_alone() const { return _standard_alone; }
+        bool get_drop_file() const { return _drop_file; }
     public:
-        Builder* set_size(int width, int height);
-        Builder* set_title(const char* title);
-        Builder* set_standard_alone(bool standard_alone);
+        Builder* size(int width, int height);
+        Builder* title(const char* title);
+        Builder* standard_alone(bool standard_alone);
+        Builder* drop_file(bool drop_file);
 
         Window* build() const;
     };
@@ -48,6 +51,7 @@ public:
 
     virtual ~Window() = default;
 
+    virtual void listen() = 0;
     static void listen_global();
     static int error();
 };

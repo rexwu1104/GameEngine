@@ -2,9 +2,9 @@
 #define GUI_H
 
 #include <queue>
+#include <game_engine/gui/Window.h>
 #include <game_engine/gui/GUIEvent.h>
 #include <game_engine/Backend.h>
-#include <game_engine/platform/Window.h>
 
 class GUI {
 private:

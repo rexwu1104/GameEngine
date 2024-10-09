@@ -1,7 +1,7 @@
 #include <iostream>
 #include <thread>
 #include <string>
-#include <game_engine/platform/win32/WindowHandle.h>
+#include <game_engine/platform/full.h>
 
 namespace game_engine {
     WindowHandle::WindowHandle(const Builder* builder): Window(builder), hWnd(nullptr) {
@@ -56,7 +56,22 @@ namespace game_engine {
         return hWnd;
     }
 
+    void WindowHandle::listen() {
+        MSG msg = {};
+        while (GetMessage(&msg, hWnd, 0, 0)) {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+    }
+
     void Window::listen_global() {
+        for (auto handle : handles) {
+            if (static_cast<Window *>(handle)->standard_alone)
+                std::thread([&]() {
+                    static_cast<Window *>(handle)->listen();
+                }).detach();
+        }
+
         MSG msg = {};
         while (GetMessage(&msg, nullptr, 0, 0)) {
             TranslateMessage(&msg);
